@@ -40,7 +40,8 @@ const RightContainer: React.FC = () => {
         {icons.map((item, index) => (
           <div
             key={index}
-            className="bg-gray-100 p-6 border-1 border-black flex flex-col items-center justify-center shadow-md"
+            className="bg-gray-100 p-6 border-1 border-black flex flex-col items-center justify-center shadow-md 
+            cursor-pointer hover:bg-gray-300 transition duration-300 transform hover:scale-105 active:scale-95"
           >
             <img src={item.src} alt={item.label} className="w-25 h-25 mb-2" />
             <span className="text-gray-700 text-sm font-medium">
