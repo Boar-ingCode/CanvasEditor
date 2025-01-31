@@ -19,7 +19,7 @@ const RightContainer: React.FC = () => {
     {/* Left Side - Logo + Title */}
     <div className="flex items-center gap-3">
       <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
-      <h2 className="text-xl font-bold">Title Here</h2>
+      <h2 className="text-xs font-bold">CanvasEditor</h2>
     </div>
   {/* Right Side - Reset Icon (Vertical Layout) */}
   <div className="flex items-center gap-2 border-b-2 border-red-500 pb-">
@@ -30,9 +30,8 @@ const RightContainer: React.FC = () => {
 
       {/* Second Section - Random Text */}
       <div className="border-2 border-black p-4 rounded-lg">
-        <p className="text-gray-700 text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-          facilisis.
+        <p className="text-gray-700">
+          Add Content
         </p>
       </div>
 
@@ -49,6 +48,13 @@ const RightContainer: React.FC = () => {
             </span>
           </div>
         ))}
+      </div>
+
+       {/* ✅ Fourth Section - Button in the Bottom Right Corner */}
+      <div className="flex justify-end mt-auto">
+        <button className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-blue-600">
+          Click Me
+        </button>
       </div>
     </div>
   );
