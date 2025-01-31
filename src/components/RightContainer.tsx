@@ -1,10 +1,9 @@
 import React from "react";
 import TextIcon from "../assets/Text-icon.png";
-import ImageIcon from "../assets/Image-icon.png";
-import BackgroundIcon from "../assets/Background-icon.png";
+import ImageIcon from "../assets/img.svg";
+import BackgroundIcon from "../assets/background.svg";
 import Logo from "../assets/logo.svg";
-import Reset from "../assets/reset.svg";
-
+import Reset from "../assets/reset.svg?react"
 
 const icons = [
     { src: TextIcon, label: "Text" },
@@ -22,8 +21,11 @@ const RightContainer: React.FC = () => {
       <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
       <h2 className="text-xl font-bold">Title Here</h2>
     </div>
-    {/* Right Side - Reset Icon */}
-    <img src={Reset} alt="Reset" className="w-10 h-10 object-contain" />
+  {/* Right Side - Reset Icon (Vertical Layout) */}
+  <div className="flex items-center gap-2 border-b-2 border-red-500 pb-">
+      <h3 className=" font-bold text-red-500">Reset</h3>
+      <Reset className="w-10 h-10 text-red-500"/>
+    </div>
   </div>
 
       {/* Second Section - Random Text */}
