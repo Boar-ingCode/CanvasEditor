@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+
+.ql-container-fixed .ql-editor {
+    min-height: 100% !important;
+    max-height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: auto !important;
+    display: flex;
+    align-items: start;
+  }
+  
+  .ql-container-fixed {
+    border: none !important;
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .ql-editor {
+    text-align: justify; /* ✅ Fully justified text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%; /* ✅ Ensures vertical centering */
+    padding: 10px; /* ✅ Adds padding for better readability */
+  }
