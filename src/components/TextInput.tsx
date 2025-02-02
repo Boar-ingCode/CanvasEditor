@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import Draggable from "react-draggable";
-import { ResizableBox, ResizeCallbackData, ResizeHandle } from "react-resizable";
+import { ResizableBox, ResizeHandle } from "react-resizable";
 import "react-quill/dist/quill.snow.css";
 import "react-resizable/css/styles.css";
-import Move from "../assets/move.png"; 
-import Delete from "../assets/delete.svg"; 
+import Move from "../assets/move.png";
+import Delete from "../assets/delete.svg";
+
+// ✅ Register Quill Font Size Styles
+const Size = Quill.import("attributors/style/size");
+Quill.register(Size, true);
 
 interface TextInputProps {
   content: string;
@@ -14,141 +18,219 @@ interface TextInputProps {
 }
 
 const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) => {
-  const modules = { toolbar: false };
+  const modules = {
+    toolbar: false, // ✅ Keep toolbar hidden, but allow manual formatting
+  };
 
+  const textRef = useRef<HTMLDivElement>(null);
+  const quillRef = useRef<ReactQuill | null>(null);
+
+  const [isFocused, setIsFocused] = useState(true);
   const [textColor, setTextColor] = useState("black");
-  const [fontSize, setFontSize] = useState(16); // Default font size
-
-  // ✅ Handle font size adjustments
-  const increaseFontSize = () => setFontSize((prev) => Math.min(prev + 2, 40)); // Max 40px
-  const decreaseFontSize = () => setFontSize((prev) => Math.max(prev - 2, 10)); // Min 10px
-
-  // ✅ Set min & max constraints
-  const minWidth = 150;
-  const minHeight = 80;
-  const maxWidth = 600;
-  const maxHeight = 400;
-
-  // ✅ State to track width, height, and whether resizing is enabled
+  const [fontSize, setFontSize] = useState(16);
   const [size, setSize] = useState({ width: 350, height: 120 });
-  const [isResizing, setIsResizing] = useState(false);
   const [resizeHandles, setResizeHandles] = useState<ResizeHandle[]>([]);
-  const draggableRef = useRef(null);
 
-  // ✅ Detect Shift key press to enable resizing
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.altKey) {
-      setResizeHandles(["se", "sw", "ne", "nw", "e", "w", "n", "s"]); // ✅ Enable all resizing directions
-      setIsResizing(true);
+  // ✅ Apply font size dynamically to selected text or future text
+  const applyFontSize = (size: number) => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      const range = editor.getSelection();
+
+      if (range && range.length > 0) {
+        // ✅ Apply size to selected text
+        editor.format("size", `${size}px`);
+      } else {
+        // ✅ Apply size to future text
+        editor.format("size", `${size}px`);
+      }
     }
   };
 
-  const handleKeyUp = () => {
-    setResizeHandles([]);
-    setIsResizing(false);
+  const increaseFontSize = () => {
+    const newSize = Math.min(fontSize + 2, 40);
+    setFontSize(newSize);
+    applyFontSize(newSize);
   };
 
-  // ✅ Attach key events
+  const decreaseFontSize = () => {
+    const newSize = Math.max(fontSize - 2, 10);
+    setFontSize(newSize);
+    applyFontSize(newSize);
+  };
+
+
+  // ✅ Prevent image drops inside the editor
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    if (!quillRef.current) return;
+    const editor = quillRef.current.getEditor();
+    const container = editor.root as HTMLDivElement;
+
+    const handleDrop = (e: DragEvent) => {
+      if (!e.dataTransfer) return;
+      const hasImageFile = Array.from(e.dataTransfer.files).some((file) =>
+        (file as File).type.startsWith("image/")
+      );
+
+      if (hasImageFile) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    container.addEventListener("drop", handleDrop);
+    return () => container.removeEventListener("drop", handleDrop);
+  }, []);
+
+
+  // ✅ Hide borders & buttons when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (textRef.current && !textRef.current.contains(event.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  useEffect(() => {
-    const editor = document.querySelector(".ql-editor");
-    if (editor) {
-      (editor as HTMLElement).style.fontSize = `${fontSize}px`;
-    }
-  }, [fontSize]);
-
   return (
-    <Draggable disabled={isResizing} bounds="parent" nodeRef={draggableRef} handle=".move-icon">
-      <div ref={draggableRef} className="absolute z-50"> 
-        <ResizableBox
-          width={size.width}
-          height={size.height}
-          minConstraints={[minWidth, minHeight]}
-          maxConstraints={[maxWidth, maxHeight]}
-          axis="both"
-          resizeHandles={resizeHandles}
-          onResizeStart={() => setIsResizing(true)}
-          onResizeStop={(e, data: ResizeCallbackData) => {
-            setIsResizing(false);
-            setSize({ width: data.size.width, height: data.size.height });
-          }}
-          className="relative border-4 border-purple-500 bg-transparent rounded-lg shadow-md flex flex-col"
-        >
-          <div className="relative w-full h-full flex flex-col">
-              {/* ✅ Move Icon (Top-Left) */}
-              <div className="absolute top-[-10px] left-[-10px] w-6 h-6 bg-white rounded-full flex items-center justify-center cursor-move move-icon">
-              <img
-                src={Move}
-                alt="Move"
-                className="w-5 h-5 pointer-events-none select-none"
-                draggable="false"
-              />
-            </div>
+    <Draggable bounds="parent" nodeRef={textRef} handle=".move-icon">
+      <div
+        ref={textRef}
+        className="absolute z-50 cursor-move"
+        onClick={() => setIsFocused(true)}
+      >
+        <div className="relative">
+          <ResizableBox
+            width={size.width}
+            height={size.height}
+            minConstraints={[150, 80]}
+            maxConstraints={[600, 400]}
+            axis="both"
+            resizeHandles={resizeHandles}
+            onResizeStop={(e, data) =>
+              setSize({ width: data.size.width, height: data.size.height })
+            }
+            className={`relative bg-transparent flex flex-col transition ${
+              isFocused ? "border-4 border-purple-500" : "border-none"
+            }`}
+          >
+            <div className="relative w-full h-full flex flex-col">
+              {/* Move Icon (Top-Left) */}
+              {isFocused && (
+                <div className="absolute top-[-10px] left-[-10px] w-6 h-6 bg-white rounded-full flex items-center justify-center cursor-move move-icon">
+                  <img
+                    src={Move}
+                    alt="Move"
+                    className="w-5 h-5 pointer-events-none select-none"
+                    draggable="false"
+                  />
+                </div>
+              )}
 
-            {/* ✅ Delete Button (Top-Right) */}
-            <button
-              onClick={onDelete}
-              className="absolute top-[-10px] right-[-10px] bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition-colors duration-200 hover:bg-red-400"
-            >
-            <img
-              src={Delete}
-              alt="Delete"
-              className="w-4 h-4 pointer-events-none select-none "
-              draggable="false"
-            />
-            </button>
-
-            {/* ✅ Rich Text Editor */}
-            <div className="flex-1 overflow-hidden cursor-text">
-              <ReactQuill
-                value={content}
-                onChange={setContent}
-                modules={modules}
-                className="h-full ql-container-fixed"
-                style={{ color: textColor }}
-              />
-            </div>
-          </div>
-
-          <div className="absolute bottom-[-30px] left-0 flex gap-2">
-              {["red", "blue", "green", "yellow", "white"].map((color, index) => (
+              {/* Delete Button (Top-Right) */}
+              {isFocused && (
                 <button
-                  key={index}
-                  className="w-6 h-6 rounded-full border border-gray-500 hover:opacity-75 transition"
-                  style={{ backgroundColor: color }} // ✅ Ensure colors are applied
-                  onClick={() => setTextColor(color)} // ✅ Change text color dynamically
-                />
-              ))}
-            </div>
+                  onClick={onDelete}
+                  className="absolute top-[-10px] right-[-10px] bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition hover:bg-red-400"
+                >
+                  <img
+                    src={Delete}
+                    alt="Delete"
+                    className="w-4 h-4 pointer-events-none select-none"
+                    draggable="false"
+                  />
+                </button>
+              )}
 
-               {/* ✅ Font Size Controls - Below Text Field, Aligned Right */}
-            <div className="absolute bottom-[-40px] right-0 flex gap-2">
-              <button
-                onClick={increaseFontSize}
-                className="w-8 h-6 flex items-center justify-center bg-gray-300 rounded-md border border-gray-500 hover:bg-gray-400 transition"
-              >
-                A+
-              </button>
-              <button
-                onClick={decreaseFontSize}
-                className="w-8 h-6 flex items-center justify-center bg-gray-300 rounded-md border border-gray-500 hover:bg-gray-400 transition"
-              >
-                A-
-              </button>
+              {/* Resize Button (Bottom-Right) with Tooltip */}
+                {isFocused && (
+                  <div className="absolute bottom-[-10px] right-[-10px]">
+                    <div className="relative group">
+                      <button
+                        onClick={onDelete}
+                        className="bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition hover:bg-purple-400"
+                      >
+                      </button>
+
+                      {/* Tooltip - Shows on Hover */}
+                      <div className="absolute bottom-8 right-0 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        To resize image/text, hold Alt button
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+
+                {/* Resize Button (Bottom-Right) with Tooltip */}
+                {isFocused && (
+                  <div className="absolute bottom-[-10px] right-[-10px]">
+                    <div className="relative group">
+                      <button
+                        onMouseDown={(e) => {
+                            setResizeHandles(["se"]);
+                        }}
+                        className="bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition hover:bg-purple-400 cursor-se-resize relative"
+                      >
+                        {/* ✅ Purple Inner Circle */}
+                        <div className="absolute w-3 h-3 bg-purple-600 rounded-full"></div>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+              {/* Rich Text Editor */}
+              <div className="flex-1 overflow-hidden cursor-text relative flex items-center justify-center">
+                <ReactQuill
+                  ref={quillRef}
+                  value={content}
+                  onChange={setContent}
+                  modules={modules}
+                  placeholder="Type your text here..." // ✅ Built-in Quill Placeholder
+                  className="h-full ql-container-fixed border-none outline-none focus:ring-0 custom-quill-placeholder"
+                  style={{
+                    color: textColor,
+                    border: "none",
+                    outline: "none",
+                  }}
+                />
+              </div>
             </div>
-        </ResizableBox>
-        {/* ✅ Container for Circles - Positioned Below & Left */}
+          </ResizableBox>
+
+          {/* ✅ Color & Font Size Buttons */}
+          {isFocused && (
+            <div className="absolute bottom-[-40px] flex gap-4 w-full justify-between">
+              {/* Text Color Options */}
+              <div className="flex gap-2">
+                {["black", "blue", "green", "yellow", "pink"].map((color, index) => (
+                  <button
+                    key={index}
+                    className="w-6 h-6 rounded-full border border-gray-500 hover:opacity-75 transition"
+                    style={{ backgroundColor: color }}
+                    onClick={() => setTextColor(color)}
+                  />
+                ))}
+              </div>
+
+              {/* Font Size Controls */}
+              <div className="flex gap-2">
+                <button onClick={increaseFontSize} className="w-8 h-6 bg-gray-300 rounded-md border hover:bg-gray-400">
+                  A+
+                </button>
+                <button onClick={decreaseFontSize} className="w-8 h-6 bg-gray-300 rounded-md border hover:bg-gray-400">
+                  A-
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </Draggable>
-    
   );
 };
 

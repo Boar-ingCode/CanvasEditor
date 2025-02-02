@@ -1,29 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightContainer";
 
 const SimpleLayout: React.FC = () => {
   const [leftBgColor, setLeftBgColor] = useState("bg-blue-200");
   const [showEditor, setShowEditor] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string | null>(null); // ✅ Store image
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [bgImage, setBgImage] = useState<string | null>(null);
+  const [resetBg, setResetBg] = useState(false); // ✅ Add Reset State
+  const [content, setContent] = useState(""); // ✅ Store text content at the top level
+  const leftContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-[70%] h-[90vh] border-4 border-black flex gap-5 p-5">
-        {/* ✅ Left Container with Draggable & Resizable Text Editor */}
+        {/* ✅ Pass setResetBg to LeftContainer */}
         <LeftContainer
+          ref={leftContainerRef}
           bgColor={leftBgColor}
           showEditor={showEditor}
           setShowEditor={setShowEditor}
-          imageSrc={imageSrc} // ✅ Pass image state
-          setImageSrc={setImageSrc} // ✅ Pass image setter
+          imageSrc={imageSrc}
+          setImageSrc={setImageSrc}
+          bgImage={bgImage}
+          resetBg={resetBg}
+          content={content} // ✅ Pass down the content
+          setContent={setContent} // ✅ Pass down content updater
         />
 
-        {/* ✅ Right Container with Clickable Icons */}
-        <RightContainer 
-          setLeftBgColor={setLeftBgColor} 
-          setShowEditor={setShowEditor} 
-          setImageSrc={setImageSrc} // ✅ Pass setImageSrc to update image
+        {/* ✅ Pass setResetBg to RightContainer */}
+        <RightContainer
+          setLeftBgColor={setLeftBgColor}
+          setShowEditor={setShowEditor}
+          setImageSrc={setImageSrc}
+          setBgImage={setBgImage}
+          leftContainerRef={leftContainerRef}
+          setResetBg={setResetBg} // ✅ Pass setResetBg Here!
         />
       </div>
     </div>
