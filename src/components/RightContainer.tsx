@@ -18,8 +18,9 @@ interface RightContainerProps {
   setShowEditor: (show: boolean) => void;
   setImageSrc: (image: string | null) => void;
   setBgImage: (image: string | null) => void;
-  setResetBg: (reset: boolean) => void;
+  setResetBg: (reset: boolean) => void; // ✅ FIXED: Add this!
   leftContainerRef: React.RefObject<HTMLDivElement>;
+  handleReset: () => void; // ✅ Make sure this exists
 }
 
 const RightContainer: React.FC<RightContainerProps> = ({
@@ -27,6 +28,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
   setShowEditor,
   setImageSrc,
   setBgImage,
+  setResetBg,
   leftContainerRef,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,22 +54,23 @@ const RightContainer: React.FC<RightContainerProps> = ({
     console.log("🔴 Resetting background...");
     setImageSrc(null);
     setBgImage(null);
-    setLeftBgColor("#93C5FD"); // ✅ Use HEX instead of Tailwind
-    console.log("🔴 Background should now be blue (#93C5FD)");
+    setLeftBgColor("##9B9B9B"); // ✅ Reset background color
     setShowEditor(false);
+    setResetBg(true); // ✅ Fix: Now it works!
     setShowWarning(false);
   };
-
 
   const handleTextOrImageClick = () => {
     console.log("🟢 Changing LeftContainer background to gray...");
     setShowEditor(true);
-    setLeftBgColor("#D1D5DB"); // ✅ Equivalent to bg-gray-300
+
+    setLeftBgColor("##9B9B9B"); // ✅ Equivalent to bg-gray-300
+    setBgImage(null); // ✅ Remove background image when clicking text/image
+
+};
+
+
   
-    setTimeout(() => {
-      console.log("🟢 Background should now be gray (#D1D5DB)");
-    }, 100);
-  };
   
 
   return (

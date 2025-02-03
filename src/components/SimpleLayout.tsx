@@ -3,18 +3,29 @@ import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightContainer";
 
 const SimpleLayout: React.FC = () => {
-  const [leftBgColor, setLeftBgColor] = useState("bg-blue-200");
+  const [leftBgColor, setLeftBgColor] = useState("#93C5FD"); // Default: Blue
   const [showEditor, setShowEditor] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [bgImage, setBgImage] = useState<string | null>(null);
   const [resetBg, setResetBg] = useState(false); // ✅ Add Reset State
-  const [content, setContent] = useState(""); // ✅ Store text content at the top level
+  const [content, setContent] = useState(""); // ✅ Store text content
   const leftContainerRef = useRef<HTMLDivElement>(null);
 
+
+  const handleReset = () => {
+    console.log("🔴 Resetting background...");
+    setImageSrc(null);
+    setBgImage(null);
+    setLeftBgColor("#93C5FD"); // ✅ Reset background color
+    setShowEditor(false);
+    setResetBg(true); // ✅ Ensure LeftContainer resets properly
+  };
+
+  
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-[70%] h-[90vh] border-4 border-black flex gap-5 p-5">
-        {/* ✅ Pass setResetBg to LeftContainer */}
+        {/* ✅ Pass resetBg to LeftContainer */}
         <LeftContainer
           ref={leftContainerRef}
           bgColor={leftBgColor}
@@ -23,20 +34,24 @@ const SimpleLayout: React.FC = () => {
           imageSrc={imageSrc}
           setImageSrc={setImageSrc}
           bgImage={bgImage}
-          resetBg={resetBg}
-          content={content} // ✅ Pass down the content
-          setContent={setContent} // ✅ Pass down content updater
+          setBgImage={setBgImage} // ✅ Ensure this is passed
+          resetBg={resetBg} // ✅ Pass Reset State
+          setResetBg={setResetBg} // ✅ Pass Reset Setter
+          content={content}
+          setContent={setContent}
         />
 
-        {/* ✅ Pass setResetBg to RightContainer */}
+        {/* ✅ Pass resetBg to RightContainer */}
         <RightContainer
-          setLeftBgColor={setLeftBgColor}
-          setShowEditor={setShowEditor}
-          setImageSrc={setImageSrc}
-          setBgImage={setBgImage}
-          leftContainerRef={leftContainerRef}
-          setResetBg={setResetBg} // ✅ Pass setResetBg Here!
-        />
+  setLeftBgColor={setLeftBgColor}
+  setShowEditor={setShowEditor}
+  setImageSrc={setImageSrc}
+  setBgImage={setBgImage}
+  setResetBg={setResetBg} // ✅ Pass it here
+  leftContainerRef={leftContainerRef}
+  handleReset={handleReset} // ✅ Pass handleReset
+/>
+
       </div>
     </div>
   );

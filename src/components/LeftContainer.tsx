@@ -1,4 +1,4 @@
-import { forwardRef,  } from "react";
+import  { forwardRef, useEffect } from "react";
 import TextInput from "./TextInput";
 import ImageInput from "./ImageInput";
 import BGimage from "../assets/start-image.png";
@@ -10,24 +10,34 @@ interface LeftContainerProps {
   imageSrc: string | null;
   setImageSrc: (image: string | null) => void;
   bgImage: string | null;
-  resetBg: boolean;
-  content: string; // ✅ Add content prop
-  setContent: (value: string) => void; // ✅ Add setContent prop
+  setBgImage: (image: string | null) => void;
+  resetBg: boolean; // ✅ Fix: Add resetBg here
+  setResetBg: (reset: boolean) => void; // ✅ Fix: Ensure this is also present
+  content: string;
+  setContent: (content: string) => void;
 }
 
+
 const LeftContainer = forwardRef<HTMLDivElement, LeftContainerProps>(
-  ({ bgColor, showEditor, setShowEditor, imageSrc, setImageSrc, bgImage, resetBg, content, setContent }, ref) => {
+  (
+    { bgColor, showEditor, setShowEditor, imageSrc, setImageSrc, bgImage, setBgImage, content, setContent },
+    ref
+  ) => {
+    // ✅ Set the initial background image only when the component mounts
+    useEffect(() => {
+      if (!bgImage) {
+        console.log("🖼 Setting default background image...");
+        setBgImage(BGimage);
+      }
+    }, [setBgImage]); 
+
     return (
       <div
         ref={ref}
         className="relative flex-1 border-4 border-black flex justify-center items-center p-5"
         style={{
-          backgroundColor: bgColor, 
-          backgroundImage: resetBg
-            ? "none"
-            : bgImage
-            ? `url(${bgImage})`
-            : `url(${BGimage})`,
+          backgroundColor: bgImage ? "transparent" : bgColor, // ✅ Use bgColor only if no image
+          backgroundImage: bgImage ? `url(${bgImage})` : "none",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -35,11 +45,11 @@ const LeftContainer = forwardRef<HTMLDivElement, LeftContainerProps>(
         {imageSrc && <ImageInput imageSrc={imageSrc} setImageSrc={setImageSrc} />}
         {showEditor && (
           <TextInput
-            content={content} // ✅ Now using prop instead of state
-            setContent={setContent} // ✅ Pass function to update text
+            content={content}
+            setContent={setContent}
             onDelete={() => {
               setShowEditor(false);
-              setContent(""); // ✅ Clear text when deleting
+              setContent("");
             }}
           />
         )}
