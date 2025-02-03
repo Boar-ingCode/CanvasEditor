@@ -190,7 +190,7 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
                   value={content}
                   onChange={setContent}
                   modules={modules}
-                  placeholder="Type your text here" // ✅ Built-in Quill Placeholder
+                  placeholder="Type your text here" 
                   className="h-full ql-container-fixed border-none outline-none focus:ring-0 custom-quill-placeholder"
                   style={{
                     color: textColor,
@@ -202,15 +202,21 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
             </div>
           </ResizableBox>
 
-          {/* ✅ Color & Font Size Buttons */}
+         {/* ✅ Color & Font Size Buttons */}
           {isFocused && (
             <div className="absolute bottom-[-40px] flex gap-4 w-full justify-between">
               {/* Text Color Options */}
               <div className="flex gap-2">
-                {["black", "blue", "green", "yellow", "pink"].map((color, index) => (
+                {["black", "white", "red", "blue", "green"].map((color, index) => (
                   <button
                     key={index}
-                    className="w-6 h-6 rounded-full border border-gray-500 hover:opacity-75 transition"
+                    className={`w-6 h-6 rounded-full border-2 transition ${
+                      textColor === color
+                        ? color === "white"
+                          ? "border-black"
+                          : "border-white"
+                        : "border-gray-500"
+                    }`}
                     style={{ backgroundColor: color }}
                     onClick={() => setTextColor(color)}
                   />
