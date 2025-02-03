@@ -34,7 +34,7 @@ const LeftContainer = forwardRef<HTMLDivElement, LeftContainerProps>(
     return (
       <div
         ref={ref}
-        className="relative flex-1 border-4 border-black flex justify-center items-center p-5"
+        className="relative flex-1 flex justify-center items-center p-5"
         style={{
           backgroundColor: bgImage ? "transparent" : bgColor, // ✅ Use bgColor only if no image
           backgroundImage: bgImage ? `url(${bgImage})` : "none",

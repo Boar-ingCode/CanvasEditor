@@ -74,7 +74,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
   
 
   return (
-    <div className="flex-1 flex flex-col gap-5 p-5 border-4 border-black relative">
+    <div className="flex-1 flex flex-col gap-5 p-5 relative">
       {/* ✅ First Section - Title and Logos */}
       <div className="flex items-center justify-between p-4 rounded-lg">
         <div className="flex items-center gap-3">
@@ -84,11 +84,11 @@ const RightContainer: React.FC<RightContainerProps> = ({
 
         {/* ✅ Reset Button - Opens Warning Popup */}
         <button
-          className="flex items-center gap-2 border-b-2 border-red-500 pb-1 text-red-500 font-bold hover:text-red-700 transition"
+          className="flex items-center gap-2 border-b-2 border-red-500 pb-1 text-lg text-red-500 font-bold hover:text-red-700 transition"
           onClick={() => setShowWarning(true)} // ✅ Show the warning popup
         >
           <h3>Reset</h3>
-          <ResetIcon className="w-8 h-8" />
+          <ResetIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -98,22 +98,22 @@ const RightContainer: React.FC<RightContainerProps> = ({
 
       {/* ✅ Clickable Icons */}
       <div className="grid grid-cols-2 gap-4">
-  {icons.map((item, index) => (
-    <div
-      key={index}
-      className="bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md  
-      cursor-pointer hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95"
-      onClick={() => {
-        if (item.label === "Text" || item.label === "Image") {
-          handleTextOrImageClick(); // ✅ Call the function
-          if (item.label === "Image") {
-            fileInputRef.current?.click();
-          }
-        } else if (item.label === "Background") {
-          bgFileInputRef.current?.click();
-        }
-      }}
-    >
+        {icons.map((item, index) => (
+          <div
+            key={index}
+            className="bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md  
+            cursor-pointer hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95"
+            onClick={() => {
+              if (item.label === "Text" || item.label === "Image") {
+                handleTextOrImageClick(); // ✅ Call the function
+                if (item.label === "Image") {
+                  fileInputRef.current?.click();
+                }
+              } else if (item.label === "Background") {
+                bgFileInputRef.current?.click();
+              }
+            }}
+      >
       <img src={item.src} alt={item.label} className="w-16 h-16 mb-2" />
       <span className="text-gray-700 text-sm font-medium">{item.label}</span>
     </div>
@@ -130,7 +130,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
       {/* ✅ Warning Popup */}
       {showWarning && (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-60 z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-[400px] text-center relative">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-[600px] text-center relative rounded-lg">
           
             {/* Close Button */}
             <button 
@@ -141,10 +141,10 @@ const RightContainer: React.FC<RightContainerProps> = ({
             </button>
 
             {/* Warning Icon */}
-            <Warning className="w-28 h-28 mx-auto text-red-500 fill-current" /> 
+            <Warning className="w-72 h-72 mx-auto text-red-500 fill-current" /> 
 
             {/* Warning Title */}
-            <h1 className="text-red-600 text-3xl font-bold mt-4">WARNING</h1>
+            <h1 className="text-black-700 text-3xl font-bold mt-4">WARNING</h1>
 
             {/* Warning Message */}
             <p className="text-gray-700 mt-4 text-lg">
@@ -154,13 +154,13 @@ const RightContainer: React.FC<RightContainerProps> = ({
             {/* ✅ Buttons */}
             <div className="flex justify-center gap-6 mt-6">
               <button
-                className="px-6 py-3 bg-gray-300 text-lg rounded-lg hover:bg-gray-400 transition"
+                className="px-6 py-3 bg-gray-300 text-sm rounded-lg hover:bg-gray-400 transition"
                 onClick={() => setShowWarning(false)}
               >
                 Cancel
               </button>
               <button
-                className="px-6 py-3 bg-[#7209B7] text-white text-lg rounded-lg hover:bg-red-700 transition"
+                className="px-6 py-3 bg-[#7209B7] text-white text-base rounded-lg hover:bg-red-700 transition"
                 onClick={handleReset} // ✅ Call function here!
               >
                 Reset

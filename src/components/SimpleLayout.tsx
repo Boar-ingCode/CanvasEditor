@@ -21,10 +21,10 @@ const SimpleLayout: React.FC = () => {
     setResetBg(true); // ✅ Ensure LeftContainer resets properly
   };
 
-  
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-[70%] h-[90vh] border-4 border-black flex gap-5 p-5">
+      <div className="w-[70%] h-[90vh]  flex gap-5 p-5">
         {/* ✅ Pass resetBg to LeftContainer */}
         <LeftContainer
           ref={leftContainerRef}
