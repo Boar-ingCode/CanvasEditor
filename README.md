@@ -20,18 +20,15 @@ like resizing, color selection, and font adjustments.
 ## 📦 **Installation & Setup**  
 
 ### **1️⃣ Clone the Repository**  
-```bash
 git clone https://github.com/your-username/canvas-editor.git
 cd canvas-editor
 
----
+## 📦 **Installation & Setup**  
 ### **2️⃣ Install Dependencies**  
-```bash
 npm install
 
 ---
 ### **3️⃣ Start the Development Server**
-```bash
 npm run dev
 
 This will launch the app at http://localhost:5173/ (or the next available port).
