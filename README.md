@@ -1,50 +1,34 @@
-# React + TypeScript + Vite
+# 🎨 **CanvasEditor** – A Dynamic Visual Editor for Creators  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 **CanvasEditor** is an interactive, drag-and-drop editing tool built with **React, TypeScript, and Vite**.  
+It allows users to add **text, images, and background elements** while providing advanced editing features  
+like resizing, color selection, and font adjustments.  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ **Features**  
 
-## Expanding the ESLint configuration
+✅ **Drag & Drop Elements** – Move text and images freely within the canvas.  
+✅ **Resizable Text & Images** – Adjust dimensions with an intuitive resizable frame.  
+✅ **Custom Font & Colors** – Change font size, color, and styles dynamically.  
+✅ **Background Customization** – Upload and apply background images.  
+✅ **Export as Image** – Save your design in a sharable format.  
+✅ **Interactive UI** – A smooth and user-friendly experience with real-time updates.  
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 📦 **Installation & Setup**  
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### **1️⃣ Clone the Repository**  
+git clone https://github.com/your-username/canvas-editor.git
+cd canvas-editor
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 📦 **Installation & Setup**  
+### **2️⃣ Install Dependencies**  
+npm install
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+---
+### **3️⃣ Start the Development Server**
+npm run dev
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+This will launch the app at http://localhost:5173/ (or the next available port).
