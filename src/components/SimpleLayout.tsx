@@ -43,15 +43,16 @@ const SimpleLayout: React.FC = () => {
 
         {/* ✅ Pass resetBg to RightContainer */}
         <RightContainer
-  setLeftBgColor={setLeftBgColor}
-  setShowEditor={setShowEditor}
-  setImageSrc={setImageSrc}
-  setBgImage={setBgImage}
-  setResetBg={setResetBg} // ✅ Pass it here
-  leftContainerRef={leftContainerRef}
-  handleReset={handleReset} // ✅ Pass handleReset
-/>
-
+          setLeftBgColor={setLeftBgColor}
+          setShowEditor={setShowEditor}
+          setImageSrc={setImageSrc}
+          setBgImage={setBgImage}
+          setResetBg={setResetBg} // ✅ Pass it here
+          leftContainerRef={leftContainerRef}
+          handleReset={handleReset} // ✅ Pass handleReset
+          showEditor={showEditor} // ✅ Pass showEditor
+          imageSrc={imageSrc} // ✅ Pass imageSrc
+        />
       </div>
     </div>
   );

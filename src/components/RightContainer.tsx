@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import ExportButton from "./ExportButton";
-import TextIcon from "../assets/Text-icon.png";
+import TextIcon from "../assets/text.svg";
 import ImageIcon from "../assets/img.svg";
 import BackgroundIcon from "../assets/background.svg";
 import Logo from "../assets/logo.svg";
@@ -14,6 +14,8 @@ const icons = [
 ];
 
 interface RightContainerProps {
+  showEditor: boolean; // ✅ Add this
+  imageSrc: string | null; // ✅ Add this
   setLeftBgColor: (color: string) => void;
   setShowEditor: (show: boolean) => void;
   setImageSrc: (image: string | null) => void;
@@ -30,6 +32,8 @@ const RightContainer: React.FC<RightContainerProps> = ({
   setBgImage,
   setResetBg,
   leftContainerRef,
+  showEditor, // ✅ Now it exists
+  imageSrc, // ✅ Now it exists
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +58,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
     console.log("🔴 Resetting background...");
     setImageSrc(null);
     setBgImage(null);
-    setLeftBgColor("##9B9B9B"); // ✅ Reset background color
+    setLeftBgColor("#9B9B9B"); // ✅ Reset background color
     setShowEditor(false);
     setResetBg(true); // ✅ Fix: Now it works!
     setShowWarning(false);
@@ -62,16 +66,20 @@ const RightContainer: React.FC<RightContainerProps> = ({
 
   const handleTextOrImageClick = (type: "text" | "image") => {
     console.log(`🟢 Changing LeftContainer background to ${type === "text" ? "gray" : "default"}`);
-
-    if (type === "text") {
-        setShowEditor(true); // ✅ Show text editor **only** when clicking "Text"
-        setLeftBgColor("#9B9B9B"); // ✅ Correct HEX color
-    } else {
-        setShowEditor(false); // ✅ Do NOT show text editor when clicking "Image"
+  
+    if (type === "text" && !showEditor) {
+      setShowEditor(true); // ✅ Show text editor **only if it doesn't already exist**
+      setLeftBgColor("#9B9B9B"); // ✅ Correct HEX color
+    } 
+    
+    if (type === "image" && !imageSrc) {
+      fileInputRef.current?.click(); // ✅ Open file picker for image selection
     }
-
-    setBgImage(null); // ✅ Remove background image when switching
-};
+  
+    // ✅ DO NOT set showEditor to false when adding an image
+    setBgImage(null); // ✅ Remove background image only if necessary
+  };
+  
 
 
   
@@ -102,26 +110,34 @@ const RightContainer: React.FC<RightContainerProps> = ({
 
       {/* ✅ Clickable Icons */}
       <div className="grid grid-cols-2 gap-4">
-        {icons.map((item, index) => (
-         <div
-         key={index}
-         className="bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md  
-         cursor-pointer hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95"
-         onClick={() => {
-           if (item.label === "Text") {
-             handleTextOrImageClick("text"); // ✅ Only show editor when clicking "Text"
-           } else if (item.label === "Image") {
-             fileInputRef.current?.click(); // ✅ Opens file picker
-             handleTextOrImageClick("image"); // ✅ Prevents auto-rendering text editor
-           } else if (item.label === "Background") {
-             bgFileInputRef.current?.click(); // ✅ Opens file picker for background
-           }
-         }}
-       >
-      <img src={item.src} alt={item.label} className="w-16 h-16 mb-2" />
-      <span className="text-gray-700 text-sm font-medium">{item.label}</span>
-    </div>
-  ))}
+  {icons.map((item, index) => {
+    const isDisabled =
+      (item.label === "Text" && showEditor) ||
+      (item.label === "Image" && imageSrc);
+
+    return (
+      <div
+        key={index}
+        className={`bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md  
+          cursor-pointer transition duration-300 transform hover:scale-105 active:scale-95 
+          ${isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-500"}`}
+        onClick={() => {
+          if (!isDisabled) {
+            if (item.label === "Text") {
+              handleTextOrImageClick("text");
+            } else if (item.label === "Image") {
+              handleTextOrImageClick("image");
+            } else if (item.label === "Background") {
+              bgFileInputRef.current?.click();
+            }
+          }
+        }}
+      >
+        <img src={item.src} alt={item.label} className="w-16 h-16 mb-2" />
+        <span className="text-gray-700 text-sm font-medium">{item.label}</span>
+      </div>
+    );
+  })}
 </div>
 
       <div className="flex justify-end mt-4">
