@@ -190,7 +190,7 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
                   value={content}
                   onChange={setContent}
                   modules={modules}
-                  placeholder="Type your text here..." // ✅ Built-in Quill Placeholder
+                  placeholder="Type your text here" // ✅ Built-in Quill Placeholder
                   className="h-full ql-container-fixed border-none outline-none focus:ring-0 custom-quill-placeholder"
                   style={{
                     color: textColor,

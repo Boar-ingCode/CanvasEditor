@@ -60,13 +60,17 @@ const RightContainer: React.FC<RightContainerProps> = ({
     setShowWarning(false);
   };
 
-  const handleTextOrImageClick = () => {
-    console.log("🟢 Changing LeftContainer background to gray...");
-    setShowEditor(true);
+  const handleTextOrImageClick = (type: "text" | "image") => {
+    console.log(`🟢 Changing LeftContainer background to ${type === "text" ? "gray" : "default"}`);
 
-    setLeftBgColor("##9B9B9B"); // ✅ Equivalent to bg-gray-300
-    setBgImage(null); // ✅ Remove background image when clicking text/image
+    if (type === "text") {
+        setShowEditor(true); // ✅ Show text editor **only** when clicking "Text"
+        setLeftBgColor("#9B9B9B"); // ✅ Correct HEX color
+    } else {
+        setShowEditor(false); // ✅ Do NOT show text editor when clicking "Image"
+    }
 
+    setBgImage(null); // ✅ Remove background image when switching
 };
 
 
@@ -99,21 +103,21 @@ const RightContainer: React.FC<RightContainerProps> = ({
       {/* ✅ Clickable Icons */}
       <div className="grid grid-cols-2 gap-4">
         {icons.map((item, index) => (
-          <div
-            key={index}
-            className="bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md  
-            cursor-pointer hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95"
-            onClick={() => {
-              if (item.label === "Text" || item.label === "Image") {
-                handleTextOrImageClick(); // ✅ Call the function
-                if (item.label === "Image") {
-                  fileInputRef.current?.click();
-                }
-              } else if (item.label === "Background") {
-                bgFileInputRef.current?.click();
-              }
-            }}
-      >
+         <div
+         key={index}
+         className="bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md  
+         cursor-pointer hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95"
+         onClick={() => {
+           if (item.label === "Text") {
+             handleTextOrImageClick("text"); // ✅ Only show editor when clicking "Text"
+           } else if (item.label === "Image") {
+             fileInputRef.current?.click(); // ✅ Opens file picker
+             handleTextOrImageClick("image"); // ✅ Prevents auto-rendering text editor
+           } else if (item.label === "Background") {
+             bgFileInputRef.current?.click(); // ✅ Opens file picker for background
+           }
+         }}
+       >
       <img src={item.src} alt={item.label} className="w-16 h-16 mb-2" />
       <span className="text-gray-700 text-sm font-medium">{item.label}</span>
     </div>
