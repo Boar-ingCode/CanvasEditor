@@ -11,7 +11,6 @@ const SimpleLayout: React.FC = () => {
   const [content, setContent] = useState(""); // ✅ Store text content
   const leftContainerRef = useRef<HTMLDivElement>(null);
 
-
   const handleReset = () => {
     console.log("🔴 Resetting background...");
     setImageSrc(null);
