@@ -7,7 +7,6 @@ import "react-resizable/css/styles.css";
 import Move from "../assets/move.png";
 import Delete from "../assets/delete.svg";
 
-// ✅ Register Quill Font Size Styles
 const Size = Quill.import("attributors/style/size");
 Quill.register(Size, true);
 
@@ -19,7 +18,7 @@ interface TextInputProps {
 
 const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) => {
   const modules = {
-    toolbar: false, // ✅ Keep toolbar hidden, but allow manual formatting
+    toolbar: false, 
   };
 
   const textRef = useRef<HTMLDivElement>(null);
@@ -31,17 +30,14 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
   const [size, setSize] = useState({ width: 350, height: 120 });
   const [resizeHandles, setResizeHandles] = useState<ResizeHandle[]>([]);
 
-  // ✅ Apply font size dynamically to selected text or future text
   const applyFontSize = (size: number) => {
     if (quillRef.current) {
       const editor = quillRef.current.getEditor();
       const range = editor.getSelection();
 
       if (range && range.length > 0) {
-        // ✅ Apply size to selected text
         editor.format("size", `${size}px`);
       } else {
-        // ✅ Apply size to future text
         editor.format("size", `${size}px`);
       }
     }
@@ -59,8 +55,6 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
     applyFontSize(newSize);
   };
 
-
-  // ✅ Prevent image drops inside the editor
   useEffect(() => {
     if (!quillRef.current) return;
     const editor = quillRef.current.getEditor();
@@ -82,8 +76,6 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
     return () => container.removeEventListener("drop", handleDrop);
   }, []);
 
-
-  // ✅ Hide borders & buttons when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (textRef.current && !textRef.current.contains(event.target as Node)) {
@@ -156,11 +148,6 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
                         className="bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition hover:bg-purple-400"
                       >
                       </button>
-
-                      {/* Tooltip - Shows on Hover */}
-                      <div className="absolute bottom-8 right-0 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        To resize image/text, hold Alt button
-                      </div>
                     </div>
                   </div>
                 )}
@@ -176,14 +163,12 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
                         }}
                         className="bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition hover:bg-purple-400 cursor-se-resize relative"
                       >
-                        {/* ✅ Purple Inner Circle */}
                         <div className="absolute w-3 h-3 bg-purple-600 rounded-full"></div>
                       </button>
                     </div>
                   </div>
                 )}
 
-              {/* Rich Text Editor */}
               <div className="flex-1 overflow-hidden cursor-text relative flex items-center justify-center">
                 <ReactQuill
                   ref={quillRef}
@@ -202,10 +187,9 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
             </div>
           </ResizableBox>
 
-         {/* ✅ Color & Font Size Buttons */}
+         {/*  Color & Font Size Buttons */}
           {isFocused && (
             <div className="absolute bottom-[-40px] flex gap-4 w-full justify-between">
-              {/* Text Color Options */}
               <div className="flex gap-2">
                 {["black", "white", "red", "blue", "green"].map((color, index) => (
                   <button

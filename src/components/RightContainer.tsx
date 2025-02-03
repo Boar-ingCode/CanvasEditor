@@ -14,15 +14,15 @@ const icons = [
 ];
 
 interface RightContainerProps {
-  showEditor: boolean; // ✅ Add this
-  imageSrc: string | null; // ✅ Add this
+  showEditor: boolean; 
+  imageSrc: string | null; 
   setLeftBgColor: (color: string) => void;
   setShowEditor: (show: boolean) => void;
   setImageSrc: (image: string | null) => void;
   setBgImage: (image: string | null) => void;
-  setResetBg: (reset: boolean) => void; // ✅ FIXED: Add this!
+  setResetBg: (reset: boolean) => void; 
   leftContainerRef: React.RefObject<HTMLDivElement>;
-  handleReset: () => void; // ✅ Make sure this exists
+  handleReset: () => void; 
 }
 
 const RightContainer: React.FC<RightContainerProps> = ({
@@ -32,8 +32,8 @@ const RightContainer: React.FC<RightContainerProps> = ({
   setBgImage,
   setResetBg,
   leftContainerRef,
-  showEditor, // ✅ Now it exists
-  imageSrc, // ✅ Now it exists
+  showEditor,
+  imageSrc, 
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
@@ -56,18 +56,15 @@ const RightContainer: React.FC<RightContainerProps> = ({
   };
 
   const handleReset = () => {
-    console.log("🔴 Resetting background...");
     setImageSrc(null);
     setBgImage(null);
-    setLeftBgColor("#9B9B9B"); // ✅ Reset background color
+    setLeftBgColor("#9B9B9B");
     setShowEditor(false);
-    setResetBg(true); // ✅ Fix: Now it works!
+    setResetBg(true); 
     setShowWarning(false);
   };
 
-  const handleTextOrImageClick = (type: "text" | "image") => {
-    console.log(`🟢 Changing LeftContainer background to ${type === "text" ? "gray" : "default"}`);
-  
+  const handleTextOrImageClick = (type: "text" | "image") => { 
     if (type === "text" && !showEditor) {
       setShowEditor(true);
       setLeftBgColor("#9B9B9B");
@@ -78,24 +75,24 @@ const RightContainer: React.FC<RightContainerProps> = ({
     }
   
     setBgImage(null);
-    setActiveButton(type); // ✅ Temporarily set active button
+    setActiveButton(type); 
   
-    setTimeout(() => setActiveButton(null), 500); // ✅ Remove active state after 500ms
+    setTimeout(() => setActiveButton(null), 500); 
   };
   
   return (
     <div className="flex-1 flex flex-col gap-5 p-5 relative">
-      {/* ✅ First Section - Title and Logos */}
+      {/*  First Section - Title and Logos */}
       <div className="flex items-center justify-between p-4 rounded-lg">
         <div className="flex items-center gap-3">
           <img src={Logo} alt="Logo" className="w-20 h-20 object-contain" />
           <h2 className="text-2xl font-bold">CanvasEditor</h2>
         </div>
 
-        {/* ✅ Reset Button - Opens Warning Popup */}
+        {/*  Reset Button - Opens Warning Popup */}
         <button
           className="flex items-center gap-2 border-b-2 border-red-500 pb-1 text-lg text-red-500 font-bold hover:text-red-700 transition"
-          onClick={() => setShowWarning(true)} // ✅ Show the warning popup
+          onClick={() => setShowWarning(true)}
         >
           <h3>Reset</h3>
           <ResetIcon className="w-6 h-6" />
@@ -106,31 +103,33 @@ const RightContainer: React.FC<RightContainerProps> = ({
         <p className="text-gray-700">Add Content</p>
       </div>
 
-      {/* ✅ Clickable Icons */}
-      <div className="grid grid-cols-2 gap-4">
+      {/*  Clickable Icons */}
+      <div className="grid grid-cols-2 gap-4 relative">
         {icons.map((item, index) => (
-        <div
-          key={index}
-          className={`bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md cursor-pointer 
-            hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95 
-            ${activeButton === item.label.toLowerCase() ? "border-4 border-purple-500" : ""}`}
-          onClick={() => {
-            if (item.label === "Text") {
-              handleTextOrImageClick("text");
-            } else if (item.label === "Image") {
-              handleTextOrImageClick("image");
-            } else if (item.label === "Background") {
-              bgFileInputRef.current?.click();
-              setActiveButton("background");
-              setTimeout(() => setActiveButton(null), 500); // ✅ Remove border after delay
-            }
-          }}
-        >
-          <img src={item.src} alt={item.label} className="w-16 h-16 mb-2" />
-          <span className="text-gray-700 text-sm font-medium">{item.label}</span>
-        </div>
-    ))}
-</div>
+          <div
+            key={index}
+            className={`bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md cursor-pointer 
+              hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95 
+              ${activeButton === item.label.toLowerCase() ? "border-4 border-purple-500 z-50" : "z-10"}`}
+            onClick={() => {
+              if (item.label === "Text") {
+                handleTextOrImageClick("text");
+                setActiveButton("text");
+              } else if (item.label === "Image") {
+                handleTextOrImageClick("image");
+                setActiveButton("image");
+              } else if (item.label === "Background") {
+                bgFileInputRef.current?.click();
+                setActiveButton("background");
+                setTimeout(() => setActiveButton(null), 500);
+              }
+            }}
+          >
+            <img src={item.src} alt={item.label} className="w-16 h-16 mb-2" />
+            <span className="text-gray-700 text-sm font-medium">{item.label}</span>
+          </div>
+        ))}
+      </div>
 
       <div className="flex justify-end mt-4">
         <ExportButton targetRef={leftContainerRef} />
@@ -139,7 +138,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
       <input type="file" accept="image/*" ref={fileInputRef} onChange={(e) => handleImageUpload(e, "image")} className="hidden" />
       <input type="file" accept="image/*" ref={bgFileInputRef} onChange={(e) => handleImageUpload(e, "background")} className="hidden" />
 
-      {/* ✅ Warning Popup */}
+      {/*  Warning Popup */}
       {showWarning && (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-60 z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-[600px] text-center relative rounded-lg">
@@ -163,7 +162,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
               You’re about to reset the whole process. Are you sure you want to do it?
             </p>
 
-            {/* ✅ Buttons */}
+            {/*  Buttons */}
             <div className="flex justify-center gap-6 mt-6">
               <button
                 className="px-6 py-3 bg-gray-300 text-sm rounded-lg hover:bg-gray-400 transition"
@@ -173,7 +172,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
               </button>
               <button
                 className="px-6 py-3 bg-[#7209B7] text-white text-base rounded-lg hover:bg-red-700 transition"
-                onClick={handleReset} // ✅ Call function here!
+                onClick={handleReset} 
               >
                 Reset
               </button>

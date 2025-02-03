@@ -11,8 +11,8 @@ interface LeftContainerProps {
   setImageSrc: (image: string | null) => void;
   bgImage: string | null;
   setBgImage: (image: string | null) => void;
-  resetBg: boolean; // ✅ Fix: Add resetBg here
-  setResetBg: (reset: boolean) => void; // ✅ Fix: Ensure this is also present
+  resetBg: boolean; 
+  setResetBg: (reset: boolean) => void; 
   content: string;
   setContent: (content: string) => void;
 }
@@ -23,7 +23,6 @@ const LeftContainer = forwardRef<HTMLDivElement, LeftContainerProps>(
     { bgColor, showEditor, setShowEditor, imageSrc, setImageSrc, bgImage, setBgImage, content, setContent },
     ref
   ) => {
-    // ✅ Set the initial background image only when the component mounts
     useEffect(() => {
       if (!bgImage) {
         console.log("🖼 Setting default background image...");

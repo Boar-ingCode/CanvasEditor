@@ -35,12 +35,12 @@ button {
   }
 
   .ql-editor {
-    text-align: justify; /* ✅ Fully justified text */
+    text-align: justify; 
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100%; /* ✅ Ensures vertical centering */
-    padding: 10px; /* ✅ Adds padding for better readability */
+    min-height: 100%; 
+    padding: 10px; 
   }
 
   .ql-container.ql-snow {
@@ -48,9 +48,9 @@ button {
   }
 
   .custom-quill-placeholder .ql-editor::before {
-    font-size: 24px !important;  /* ✅ Makes text larger */
-    color: gray !important;      /* ✅ Placeholder color */
-    text-align: center !important; /* ✅ Centers text */
+    font-size: 24px !important; 
+    color: gray !important;     
+    text-align: center !important; 
     width: 100%;
     display: flex;
     justify-content: center;
