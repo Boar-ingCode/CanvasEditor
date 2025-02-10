@@ -42,7 +42,7 @@ const ImageInput: React.FC<ImageInputProps> = ({ imageSrc, setImageSrc }) => {
           maxConstraints={[600, 600]}
           axis="both"
           resizeHandles={resizeHandles} 
-          onResizeStop={(e, data: ResizeCallbackData) => {
+          onResizeStop={(_e, data: ResizeCallbackData) => {
             setIsResizing(false);
             setImageSize({ width: data.size.width, height: data.size.height });
           }}

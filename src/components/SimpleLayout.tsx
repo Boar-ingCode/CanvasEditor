@@ -39,15 +39,16 @@ const SimpleLayout: React.FC = () => {
           setContent={setContent}
         />
         <RightContainer
+          showEditor={showEditor}
+          imageSrc={imageSrc}
+          bgImage={bgImage} 
           setLeftBgColor={setLeftBgColor}
           setShowEditor={setShowEditor}
           setImageSrc={setImageSrc}
           setBgImage={setBgImage}
-          setResetBg={setResetBg} 
+          setResetBg={setResetBg}
           leftContainerRef={leftContainerRef}
           handleReset={handleReset}
-          showEditor={showEditor}
-          imageSrc={imageSrc} 
         />
       </div>
     </div>

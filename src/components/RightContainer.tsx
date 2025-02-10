@@ -6,6 +6,7 @@ import BackgroundIcon from "../assets/background.svg";
 import Logo from "../assets/logo.svg";
 import ResetIcon from "../assets/reset.svg?react";
 import Warning from "../assets/alert.svg?react";
+import BGimage from "../assets/start-image.png";
 
 const icons = [
   { src: TextIcon, label: "Text" },
@@ -16,6 +17,7 @@ const icons = [
 interface RightContainerProps {
   showEditor: boolean; 
   imageSrc: string | null; 
+  bgImage: string | null; 
   setLeftBgColor: (color: string) => void;
   setShowEditor: (show: boolean) => void;
   setImageSrc: (image: string | null) => void;
@@ -34,6 +36,7 @@ const RightContainer: React.FC<RightContainerProps> = ({
   leftContainerRef,
   showEditor,
   imageSrc, 
+  bgImage,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
@@ -58,28 +61,30 @@ const RightContainer: React.FC<RightContainerProps> = ({
   const handleReset = () => {
     setImageSrc(null);
     setBgImage(null);
-    setLeftBgColor("#9B9B9B");
+    setLeftBgColor("#9B9B9B"); 
     setShowEditor(false);
     setResetBg(true); 
+    setActiveButton(null);
     setShowWarning(false);
   };
 
-  const handleTextOrImageClick = (type: "text" | "image") => { 
+  const handleTextOrImageClick = (type: "text" | "image", bgImage?: string | null) => { 
     if (type === "text" && !showEditor) {
       setShowEditor(true);
-      setLeftBgColor("#9B9B9B");
+
+      if (!bgImage || bgImage === BGimage) {
+        setLeftBgColor("#9B9B9B");  
+        setBgImage(null); 
+      }
     } 
-    
+  
     if (type === "image" && !imageSrc) {
       fileInputRef.current?.click();
     }
   
-    setBgImage(null);
-    setActiveButton(type); 
-  
-    setTimeout(() => setActiveButton(null), 500); 
+    setActiveButton(type);
   };
-  
+
   return (
     <div className="flex-1 flex flex-col gap-5 p-5 relative">
       {/*  First Section - Title and Logos */}
@@ -107,16 +112,16 @@ const RightContainer: React.FC<RightContainerProps> = ({
       <div className="grid grid-cols-2 gap-4 relative">
         {icons.map((item, index) => (
           <div
-            key={index}
-            className={`bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md cursor-pointer 
-              hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95 
-              ${activeButton === item.label.toLowerCase() ? "border-4 border-purple-500 z-50" : "z-10"}`}
+          key={index}
+          className={`bg-[#F7F7F8] p-15 flex flex-col items-center justify-center shadow-md cursor-pointer 
+            hover:bg-gray-500 transition duration-300 transform hover:scale-105 active:scale-95 
+            ${activeButton === item.label.toLowerCase() ? "border-4 border-purple-500 z-50" : "z-10"}`}
             onClick={() => {
               if (item.label === "Text") {
-                handleTextOrImageClick("text");
+                handleTextOrImageClick("text", bgImage);
                 setActiveButton("text");
               } else if (item.label === "Image") {
-                handleTextOrImageClick("image");
+                handleTextOrImageClick("image", bgImage);
                 setActiveButton("image");
               } else if (item.label === "Background") {
                 bgFileInputRef.current?.click();

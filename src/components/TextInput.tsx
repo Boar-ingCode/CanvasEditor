@@ -104,7 +104,7 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
             maxConstraints={[600, 400]}
             axis="both"
             resizeHandles={resizeHandles}
-            onResizeStop={(e, data) =>
+            onResizeStop={(_e, data) =>
               setSize({ width: data.size.width, height: data.size.height })
             }
             className={`relative bg-transparent flex flex-col transition ${
@@ -158,7 +158,7 @@ const TextInput: React.FC<TextInputProps> = ({ content, setContent, onDelete }) 
                   <div className="absolute bottom-[-10px] right-[-10px]">
                     <div className="relative group">
                       <button
-                        onMouseDown={(e) => {
+                        onMouseDown={() => {
                             setResizeHandles(["se"]);
                         }}
                         className="bg-white w-6 h-6 rounded-full flex items-center justify-center shadow-md transition hover:bg-purple-400 cursor-se-resize relative"
